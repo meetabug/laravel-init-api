@@ -2,28 +2,28 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\Api\UserRequest;
-use App\Http\Resources\Api\UserResource;
-use App\Models\User;
+use App\Http\Requests\Api\AdminRequest;
+use App\Http\Resources\Api\AdminResource;
+use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class UsersController extends Controller
+class AdminsController extends Controller
 {
     public function index()
     {
-        $users = User::paginate(3);
-        return UserResource::collection($users);
+        $admins = Admin::paginate(3);
+        return AdminResource::collection($admins);
     }
 
-    public function show(User $user)
+    public function show(Admin $admin)
     {
-        return $this->success(new UserResource($user));
+        return $this->success(new AdminResource($admin));
     }
     
-    public function store(UserRequest $request)
+    public function store(AdminRequest $request)
     {
-        User::create($request->all());
+        Admin::create($request->all());
         return $this->setStatusCode(201)->success('用户注册成功');
     }
 
@@ -39,13 +39,13 @@ class UsersController extends Controller
 
     public function logout()
     {
-        Auth::guard('api')->logout();
+        Auth::logout();
         return $this->success('退出成功...');
     }
 
     public function info()
     {
-        $user = Auth::guard('api')->user();
-        return $this->success(new UserResource($user));
+        $admin = Auth::user();
+        return $this->success(new AdminResource($admin));
     }
 }

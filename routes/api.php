@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 
 Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
+    Route::get('/users/info','UsersController@info')
+        ->name('users.info');
     Route::get('/users', 'UsersController@index')
         ->name('users.index');
     Route::get('/users/{user}', 'UsersController@show')
@@ -11,4 +13,5 @@ Route::namespace('Api')->prefix('v1')->middleware('cors')->group(function () {
         ->name('users.store');
     Route::post('/login','UsersController@login')
         ->name('users.login');
+
 });

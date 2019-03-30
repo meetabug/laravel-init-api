@@ -32,6 +32,16 @@ class AdminsController extends Controller
         $present_guard = Auth::getDefaultDriver();
         $token = Auth::claims(['guard'=>$present_guard])->attempt(['name' => $request->name, 'password' => $request->password]);
         if($token){
+            $admin = Auth::user();
+            if($admin->last_token) {
+                try{
+                    Auth::setToken($admin->last_token)->invalidate();
+                }catch (TokenExpiredException $e){
+                    //因为让一个过期的token再失效，会抛出异常，所以我们捕捉异常，不需要做任何处理
+                }
+            }
+            $admin->last_token = $token;
+            $admin->save();
             return $this->setStatusCode(201)->success(['token' => 'bearer ' . $token]);
         }
         return $this->failed('用户登录失败',401);
